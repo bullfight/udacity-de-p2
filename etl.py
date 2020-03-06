@@ -25,34 +25,33 @@ def extract(file_path_list):
     # for every filepath in the file path list
     for f in file_path_list:
 
-    # reading csv file
+        # reading csv file
         with open(f, 'r', encoding = 'utf8', newline='') as csvfile:
             # creating a csv reader object
             csvreader = csv.reader(csvfile)
             next(csvreader)
 
-     # extracting each data row one by one and append it
+            # extracting each data row one by one and append it
             for line in csvreader:
                 #print(line)
                 full_data_rows_list.append(line)
 
-    # uncomment the code below if you would like to get total number of rows
-    #print(len(full_data_rows_list))
-    # uncomment the code below if you would like to check to see what the list of event data rows will look like
-    #print(full_data_rows_list)
+    transform(full_data_rows_list)
 
-    # creating a smaller event data csv file called event_datafile_full csv that will be used to insert data into the \
+def transform(full_data_rows_list):
+    # creating a smaller event data csv file called event_datafile_full csv that will be used to insert data into the
     # Apache Cassandra tables
     csv.register_dialect('myDialect', quoting=csv.QUOTE_ALL, skipinitialspace=True)
 
     with open('event_datafile_new.csv', 'w', encoding = 'utf8', newline='') as f:
         writer = csv.writer(f, dialect='myDialect')
         writer.writerow(['artist','firstName','gender','itemInSession','lastName','length',\
-                    'level','location','sessionId','song','userId'])
+                'level','location','sessionId','song','userId'])
         for row in full_data_rows_list:
             if (row[0] == ''):
                 continue
             writer.writerow((row[0], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[12], row[13], row[16]))
+
 
 def test():
     # check the number of rows in your csv file
