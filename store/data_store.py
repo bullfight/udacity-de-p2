@@ -26,3 +26,24 @@ class DataStore:
     def execute(self, sql, data=None):
         result = self.session.execute(sql, data)
         return result
+
+    def create_table(self):
+        self.execute(self.create_table_query)
+
+    def drop_table(self):
+        query = "DROP TABLE IF EXISTS {}".format(self.table_name)
+        self.execute(query)
+
+    def create(self, data):
+        keys = list(data.keys())
+        names = ', '.join(keys)
+        insert_string = ['%s'] * len(keys)
+        insert_string = ', '.join(insert_string)
+        query = "INSERT INTO {} ({}) VALUES ({})".format(self.table_name, names, insert_string)
+
+        self.execute(query, data.values())
+
+    def where(self, query):
+        select_query = "SELECT {} FROM {} WHERE {}".format(self.select_keys, self.table_name, query)
+        result = self.execute(select_query)
+        return result
