@@ -37,7 +37,7 @@ class DataStore:
         self.drop_table()
         self.create_table()
         data_frame = pandas.read_csv(filepath)
-        columns    = list(self.attributes.keys())
+        columns    = list(self.columns.keys())
 
         for i, row in data_frame.iterrows():
             data = dict(row[columns])
@@ -97,7 +97,7 @@ class DataStore:
 
     def __build_columns(self):
         output = []
-        for key, value in self.attributes.items():
+        for key, value in self.columns.items():
             value = "{} {}".format(key, value)
             output.append(value)
 

@@ -3,7 +3,7 @@ from .data_store import DataStore
 class UserListen(DataStore):
     primary_keys = ['song', 'userId']
     select_keys  = ['firstName', 'lastName']
-    attributes   = {
+    columns      = {
         'song':      'text',
         'userId':    'int',
         'artist':    'text',

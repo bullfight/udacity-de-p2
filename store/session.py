@@ -3,7 +3,7 @@ from .data_store import DataStore
 class Session(DataStore):
     primary_keys = ['sessionId', 'itemInSession']
     select_keys  = ['artist', 'song', 'length']
-    attributes   = {
+    columns      = {
         'sessionId':     'int',
         'itemInSession': 'int',
         'artist':        'text',
