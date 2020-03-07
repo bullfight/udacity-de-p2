@@ -12,8 +12,3 @@ class UserSession(DataStore):
         'firstName':     'text',
         'lastName':      'text',
     }
-
-
-
-
-

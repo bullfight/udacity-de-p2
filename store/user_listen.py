@@ -8,5 +8,3 @@ class UserListen(DataStore):
         'firstName': 'text',
         'lastName':  'text'
     }
-
-

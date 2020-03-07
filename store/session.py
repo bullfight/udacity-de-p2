@@ -10,4 +10,3 @@ class Session(DataStore):
         'song':          'text',
         'length':        'double'
     }
-
