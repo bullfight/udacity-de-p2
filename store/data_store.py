@@ -65,12 +65,16 @@ class DataStore:
         """
         select_query = "SELECT {} FROM {} WHERE {}".format(self.__build_select_keys(), self.__build_table_name(), query)
         result = self.__execute(select_query)
-        return result
+        return result._current_rows
 
     def __setup_session(self):
         auth_provider = PlainTextAuthProvider(username='cassandra', password='cassandra')
         cluster = Cluster(auth_provider=auth_provider)
         session = cluster.connect()
+
+        session.row_factory = self.__pandas_factory
+        session.default_fetch_size = None
+
         return cluster, session
 
     def __setup_keyspace(self):
@@ -84,6 +88,8 @@ class DataStore:
 
         self.session.set_keyspace('udacity')
 
+    def __pandas_factory(self, colnames, rows):
+        return pandas.DataFrame(rows, columns=colnames)
 
     def __execute(self, sql, data=None):
         result = self.session.execute(sql, data)
