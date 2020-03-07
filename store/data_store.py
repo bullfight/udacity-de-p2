@@ -79,6 +79,8 @@ class DataStore:
         return result
 
     def load(self, filepath):
+        self.drop_table()
+        self.create_table()
         data_frame = pandas.read_csv(filepath)
         columns    = list(self.attributes.keys())
 
