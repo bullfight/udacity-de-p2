@@ -1,7 +1,6 @@
 from .data_store import DataStore
 
 class Session(DataStore):
-    table_name = "sessions"
     create_table_query = """
         CREATE TABLE IF NOT EXISTS {}
         (
@@ -12,6 +11,6 @@ class Session(DataStore):
             length        float,
             PRIMARY KEY  (sessionId, itemInSession)
         )
-    """.format(table_name)
+    """
 
     select_keys = 'artist, song, length'
