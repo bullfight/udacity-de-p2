@@ -4,48 +4,8 @@ import pandas
 
 class DataStore:
     def __init__(self):
-        self.session = self.setup_session()
-        self.setup_keyspace()
-
-    def setup_session(self):
-        auth_provider = PlainTextAuthProvider(username='cassandra', password='cassandra')
-        cluster = Cluster(auth_provider=auth_provider)
-        session = cluster.connect()
-        return session
-
-    def setup_keyspace(self):
-        self.session.execute(
-            """
-                CREATE KEYSPACE IF NOT EXISTS udacity
-                WITH REPLICATION =
-                { 'class' : 'SimpleStrategy', 'replication_factor' : 1 }
-            """
-        )
-
-        self.session.set_keyspace('udacity')
-
-    def execute(self, sql, data=None):
-        result = self.session.execute(sql, data)
-        return result
-
-    def table_name(self):
-        name = self.__class__.__name__
-        name = name.lower() + 's'
-
-        return name
-
-    def build_columns(self):
-        output = []
-        for key, value in self.attributes.items() :
-            value = "{} {}".format(key, value)
-            output.append(value)
-
-        columns = ', '.join(output)
-
-        return columns
-
-    def build_primary_keys(self):
-        return ', '.join(self.primary_keys)
+        self.session = self.__setup_session()
+        self.__setup_keyspace()
 
     def create_table(self):
         query = """
@@ -53,30 +13,13 @@ class DataStore:
                 {},
                 PRIMARY KEY  ({})
             )
-        """.format(self.table_name(), self.build_columns(), self.build_primary_keys())
+        """.format(self.__build_table_name(), self.__build_columns(), self.__build_primary_keys())
 
-        self.execute(query)
+        self.__execute(query)
 
     def drop_table(self):
-        query = "DROP TABLE IF EXISTS {}".format(self.table_name())
-        self.execute(query)
-
-    def create(self, data):
-        keys = list(data.keys())
-        names = ', '.join(keys)
-        insert_string = ['%s'] * len(keys)
-        insert_string = ', '.join(insert_string)
-        query = "INSERT INTO {} ({}) VALUES ({})".format(self.table_name(), names, insert_string)
-
-        self.execute(query, data.values())
-
-    def build_select_keys(self):
-        return ', '.join(self.select_keys)
-
-    def where(self, query):
-        select_query = "SELECT {} FROM {} WHERE {}".format(self.build_select_keys(), self.table_name(), query)
-        result = self.execute(select_query)
-        return result
+        query = "DROP TABLE IF EXISTS {}".format(self.__build_table_name())
+        self.__execute(query)
 
     def load(self, filepath):
         self.drop_table()
@@ -87,3 +30,61 @@ class DataStore:
         for i, row in data_frame.iterrows():
             data = dict(row[columns])
             self.create(data)
+
+    def create(self, data):
+        keys = list(data.keys())
+        names = ', '.join(keys)
+        insert_string = ['%s'] * len(keys)
+        insert_string = ', '.join(insert_string)
+        query = "INSERT INTO {} ({}) VALUES ({})".format(self.__build_table_name(), names, insert_string)
+
+        self.__execute(query, data.values())
+
+    def where(self, query):
+        select_query = "SELECT {} FROM {} WHERE {}".format(self.__build_select_keys(), self.__build_table_name(), query)
+        result = self.__execute(select_query)
+        return result
+
+    def __setup_session(self):
+        auth_provider = PlainTextAuthProvider(username='cassandra', password='cassandra')
+        cluster = Cluster(auth_provider=auth_provider)
+        session = cluster.connect()
+        return session
+
+    def __setup_keyspace(self):
+        self.session.execute(
+            """
+                CREATE KEYSPACE IF NOT EXISTS udacity
+                WITH REPLICATION =
+                { 'class' : 'SimpleStrategy', 'replication_factor' : 1 }
+            """
+        )
+
+        self.session.set_keyspace('udacity')
+
+
+    def __execute(self, sql, data=None):
+        result = self.session.execute(sql, data)
+        return result
+
+    def __build_table_name(self):
+        name = self.__class__.__name__
+        name = name.lower() + 's'
+
+        return name
+
+    def __build_columns(self):
+        output = []
+        for key, value in self.attributes.items() :
+            value = "{} {}".format(key, value)
+            output.append(value)
+
+        columns = ', '.join(output)
+
+        return columns
+
+    def __build_primary_keys(self):
+        return ', '.join(self.primary_keys)
+
+    def __build_select_keys(self):
+        return ', '.join(self.select_keys)
