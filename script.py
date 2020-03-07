@@ -1,5 +1,10 @@
 import store
 
+extract = store.Extract('./event_data')
+columns = ['artist','firstName','gender','itemInSession','lastName','length', 'level','location','sessionId','song','userId']
+dropna  = ['artist']
+extract.save('event_datafile_new.csv', columns, dropna)
+
 print('Session')
 session = store.Session()
 session.load('./event_datafile_new.csv')
