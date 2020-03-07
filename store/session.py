@@ -1,16 +1,13 @@
 from .data_store import DataStore
 
 class Session(DataStore):
-    create_table_query = """
-        CREATE TABLE IF NOT EXISTS {}
-        (
-            sessionId     int,
-            itemInSession int,
-            artist        text,
-            song          text,
-            length        float,
-            PRIMARY KEY  (sessionId, itemInSession)
-        )
-    """
+    primary_keys = ['sessionId', 'itemInSession']
+    select_keys  = ['artist', 'song', 'length']
+    attributes   = {
+        'sessionId':     'int',
+        'itemInSession': 'int',
+        'artist':        'text',
+        'song':          'text',
+        'length':        'double'
+    }
 
-    select_keys = 'artist, song, length'

@@ -1,5 +1,6 @@
 from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
+import pandas
 
 class DataStore:
     def __init__(self):
@@ -33,8 +34,27 @@ class DataStore:
 
         return name
 
+    def build_columns(self):
+        output = []
+        for key, value in self.attributes.items() :
+            value = "{} {}".format(key, value)
+            output.append(value)
+
+        columns = ', '.join(output)
+
+        return columns
+
+    def build_primary_keys(self):
+        return ', '.join(self.primary_keys)
+
     def create_table(self):
-        query = self.create_table_query.format(self.table_name())
+        query = """
+            CREATE TABLE IF NOT EXISTS {} (
+                {},
+                PRIMARY KEY  ({})
+            )
+        """.format(self.table_name(), self.build_columns(), self.build_primary_keys())
+
         self.execute(query)
 
     def drop_table(self):
@@ -50,7 +70,18 @@ class DataStore:
 
         self.execute(query, data.values())
 
+    def build_select_keys(self):
+        return ', '.join(self.select_keys)
+
     def where(self, query):
-        select_query = "SELECT {} FROM {} WHERE {}".format(self.select_keys, self.table_name(), query)
+        select_query = "SELECT {} FROM {} WHERE {}".format(self.build_select_keys(), self.table_name(), query)
         result = self.execute(select_query)
         return result
+
+    def load(self, filepath):
+        data_frame = pandas.read_csv(filepath)
+        columns    = list(self.attributes.keys())
+
+        for i, row in data_frame.iterrows():
+            data = dict(row[columns])
+            self.create(data)
