@@ -10,6 +10,8 @@ class UserSession(DataStore):
             itemInSession int,
             artist        text,
             song          text,
+            firstName     text,
+            lastName      text,
             PRIMARY KEY   (userId, sessionId, itemInSession)
         )
     """.format(table_name)
