@@ -75,7 +75,7 @@ class DataStore:
 
     def __build_columns(self):
         output = []
-        for key, value in self.attributes.items() :
+        for key, value in self.attributes.items():
             value = "{} {}".format(key, value)
             output.append(value)
 
