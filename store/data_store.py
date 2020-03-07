@@ -5,8 +5,12 @@ import pandas
 class DataStore:
     def __init__(self):
         """Initialize Extract DataStore add setup a Cassandra session"""
-        self.session = self.__setup_session()
+        self.cluster, self.session = self.__setup_session()
         self.__setup_keyspace()
+
+    def shutdown(self):
+        self.session.shutdown()
+        self.cluster.shutdown()
 
     def create_table(self):
         """Create a table named after the class"""
@@ -67,7 +71,7 @@ class DataStore:
         auth_provider = PlainTextAuthProvider(username='cassandra', password='cassandra')
         cluster = Cluster(auth_provider=auth_provider)
         session = cluster.connect()
-        return session
+        return cluster, session
 
     def __setup_keyspace(self):
         self.session.execute(
