@@ -4,10 +4,12 @@ import pandas
 
 class DataStore:
     def __init__(self):
+        """Initialize Extract DataStore add setup a Cassandra session"""
         self.session = self.__setup_session()
         self.__setup_keyspace()
 
     def create_table(self):
+        """Create a table named after the class"""
         query = """
             CREATE TABLE IF NOT EXISTS {} (
                 {},
@@ -18,10 +20,16 @@ class DataStore:
         self.__execute(query)
 
     def drop_table(self):
+        """Drop the table"""
         query = "DROP TABLE IF EXISTS {}".format(self.__build_table_name())
         self.__execute(query)
 
     def load(self, filepath):
+        """Load a CSV from a filepath
+
+        Arguments:
+        filepath -- a filepath to a csv (string)
+        """
         self.drop_table()
         self.create_table()
         data_frame = pandas.read_csv(filepath)
@@ -32,6 +40,11 @@ class DataStore:
             self.create(data)
 
     def create(self, data):
+        """Insert a row into the Cassandra datastore
+
+        Arguments:
+        data -- a dict with keys present on the table (dict)
+        """
         keys = list(data.keys())
         names = ', '.join(keys)
         insert_string = ['%s'] * len(keys)
@@ -41,6 +54,11 @@ class DataStore:
         self.__execute(query, data.values())
 
     def where(self, query):
+        """Query the Cassandra datastore and return a ResultSet
+
+        Arguments:
+        query -- a where clause query string
+        """
         select_query = "SELECT {} FROM {} WHERE {}".format(self.__build_select_keys(), self.__build_table_name(), query)
         result = self.__execute(select_query)
         return result

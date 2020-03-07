@@ -4,9 +4,17 @@ import pandas
 
 class Extract:
     def __init__(self, directory):
+        """Initialize Extract and set a directory(string)"""
         self.directory = directory
 
     def save(self, filename, columns=None, dropna=None):
+        """Iterate over each file in the directory and save to filename
+
+        Arguments:
+        filename -- The output filename (string)
+        columns  -- List of columns to extract from csv files (list), optional
+        dropna   -- List of columns to drop rows when value is na (list), optional
+        """
         filepaths   = self.__get_filepaths()
         data_frame  = self.__extract(filepaths)
         self.__export(data_frame, filename, columns, dropna)
