@@ -15,7 +15,7 @@ class Extract:
         return glob.glob(os.path.join(self.directory, '*.csv'))
 
     def __extract(self, filepaths):
-        return pandas.concat(map(pandas.read_csv, filepaths))
+        return pandas.concat(map(lambda file: pandas.read_csv(file, dtype=str), filepaths))
 
     def __export(self, data_frame, filename, columns, dropna):
         if columns:
