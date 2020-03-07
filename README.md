@@ -34,23 +34,7 @@ data_frame.head()
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
+<table>
   <thead>
     <tr style="text-align: right;">
       <th></th>
@@ -140,7 +124,6 @@ data_frame.head()
     </tr>
   </tbody>
 </table>
-</div>
 
 
 
@@ -190,23 +173,7 @@ session.where('sessionid = 338 AND itemInSession = 4')
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
+<table>
   <thead>
     <tr style="text-align: right;">
       <th></th>
@@ -224,8 +191,6 @@ session.where('sessionid = 338 AND itemInSession = 4')
     </tr>
   </tbody>
 </table>
-</div>
-
 
 
 ### Query 2: Give me only the following: name of artist, song (sorted by itemInSession) and user (first and last name) for userid = 10, sessionid = 182
@@ -268,23 +233,7 @@ user_session.where('userId = 10 AND sessionId = 182')
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
+<table>
   <thead>
     <tr style="text-align: right;">
       <th></th>
@@ -325,8 +274,6 @@ user_session.where('userId = 10 AND sessionId = 182')
     </tr>
   </tbody>
 </table>
-</div>
-
 
 
 ### Query 3: Give me every user name (first and last) in my music app history who listened to the song 'All Hands Against His Own'
@@ -366,23 +313,7 @@ user_listen.where("song = 'All Hands Against His Own'")
 ```
 
 
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
+<table>
   <thead>
     <tr style="text-align: right;">
       <th></th>
@@ -408,8 +339,6 @@ user_listen.where("song = 'All Hands Against His Own'")
     </tr>
   </tbody>
 </table>
-</div>
-
 
 
 ## Drop the tables before closing out the sessions
