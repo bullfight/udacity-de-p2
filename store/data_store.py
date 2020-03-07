@@ -1,3 +1,7 @@
+import cassandra
+from cassandra.cluster import Cluster
+from cassandra.auth import PlainTextAuthProvider
+
 class DataStore:
     def __init__(self):
         self.session = self.setup_session()
